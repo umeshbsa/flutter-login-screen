@@ -3,7 +3,7 @@
 
 ### Screenshot
  <img 
-width="40%" alt="portfolio_view"
+width="30%" alt="portfolio_view"
  src="https://github.com/umeshbsa/flutter-login-screen/blob/master/screen.gif"/>
  
 ### Jenkins and jCenter/maven
