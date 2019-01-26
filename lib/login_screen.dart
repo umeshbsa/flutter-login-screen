@@ -20,12 +20,26 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class LoginPageUI extends StatelessWidget {
+class LoginPageUI extends StatefulWidget {
+  @override
+  _LoginPageUIState createState() => _LoginPageUIState();
+}
+
+class _LoginPageUIState extends State<LoginPageUI> {
+  BuildContext context;
+  final FocusNode _passwordFocusNode = new FocusNode();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    this.context = context;
 
-      body: new Container(
+    return new Scaffold(
+      body: new GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
         child: new SingleChildScrollView(
           child: new Container(
             padding: EdgeInsets.fromLTRB(30, 110.0, 30, 20),
@@ -48,6 +62,13 @@ class LoginPageUI extends StatelessWidget {
                           fontSize: 15.0, fontWeight: FontWeight.bold),
                     ),
                     TextFormField(
+                      onFieldSubmitted: (String value) {
+                        FocusScope.of(context).requestFocus(_passwordFocusNode);
+                      },
+                      autofocus: true,
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                       decoration:
                           InputDecoration(labelText: 'Enter your email id'),
                     ),
@@ -65,6 +86,9 @@ class LoginPageUI extends StatelessWidget {
                           fontSize: 15.0, fontWeight: FontWeight.bold),
                     ),
                     TextFormField(
+                        focusNode: _passwordFocusNode,
+                        controller: _passwordController,
+                        textInputAction: TextInputAction.done,
                         decoration:
                             InputDecoration(labelText: 'Enter your password'),
                         keyboardType: TextInputType.text,
@@ -76,9 +100,9 @@ class LoginPageUI extends StatelessWidget {
                   minWidth: double.maxFinite,
                   height: 50.0,
                   child: RaisedButton(
-                      onPressed: () {},
+                      onPressed: showAlert,
                       child: new Text(
-                        "Login with email",
+                        "Login with Email",
                         style:
                             new TextStyle(color: Colors.white, fontSize: 20.0),
                       )),
@@ -93,7 +117,7 @@ class LoginPageUI extends StatelessWidget {
                       child: new Text(
                         "Login with Facebook",
                         style:
-                        new TextStyle(color: Colors.white, fontSize: 20.0),
+                            new TextStyle(color: Colors.white, fontSize: 20.0),
                       )),
                 ),
               ],
@@ -101,6 +125,38 @@ class LoginPageUI extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void showAlert() {
+    print("D");
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          // Retrieve the text the user has typed in using our
+          // TextEditingController
+          title: new Text("Login Screen"),
+          content: new Text("Email :" +
+              _emailController.text +
+              "\nPassword : " +
+              _passwordController.text),
+          actions: <Widget>[
+            FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
+            FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  _emailController.clear();
+                  _passwordController.clear();
+                  Navigator.of(context).pop();
+                })
+          ],
+        );
+      },
     );
   }
 }
